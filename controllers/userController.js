@@ -25,7 +25,7 @@ exports.addUser = async (req, res) => {
     if (err.name === "SequelizeUniqueConstraintError") {
       console.log("duplicate entry, email already used");
 
-      res.status(400).json({ message: "Email already in use" });
+      res.status(400).json({ message: "Email already in use, please Login" });
     } else {
       console.log("error in adding user", err);
       res.status(500).json({ message: "Error in adding user" });

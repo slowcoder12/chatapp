@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const sequelize = require("../util/database");
+const sequelize = require("../database");
 
 const User = sequelize.define("user", {
   id: {
@@ -17,9 +17,8 @@ const User = sequelize.define("user", {
     unique: true,
   },
   phone: {
-    type: Sequelize.NUMBER,
+    type: Sequelize.BIGINT,
     allowNull: false,
-    unique: true,
   },
   password: {
     type: Sequelize.STRING,
