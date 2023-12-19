@@ -1,14 +1,14 @@
 body {
-    font-family: sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
 }
 
 .container {
-    width: 400px;
+    width: 40%;
     margin: 50px auto;
-    border: 1px solid #ddd;
-    padding: 20px;
+
+    padding: 25px;
     border-radius: 5px;
 }
 
@@ -27,8 +27,8 @@ label {
 }
 
 input {
-    width: 100%;
-    padding: 5px;
+    min-width: 100%;
+    padding: 8px;
     border: 1px solid #ccc;
     border-radius: 3px;
 }
@@ -41,6 +41,7 @@ button {
     border-radius: 5px;
     cursor: pointer;
     margin-top: 10px;
+    margin: 10px;
 }
 
 button:hover {
