@@ -16,6 +16,8 @@ app.use(express.static("public"));
 
 app.post("/signup", userRoute);
 
+app.post("/login", userRoute);
+
 sequelize
   .sync({ force: false })
   .then((result) => {

@@ -10,10 +10,11 @@ loginForm.addEventListener("submit", async function (event) {
   try {
     const response = await axios.post(`/login`, loginUser);
     if (response.status === 200) {
-      console.log(response);
+      // console.log(response);
 
       alert("user logged in successfully");
-      console.log(response.data.token);
+      //console.log(response.data.token);
+      localStorage.setItem("token", response.data.token);
     }
   } catch (err) {
     if (err.response) {
