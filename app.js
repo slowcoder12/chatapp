@@ -9,6 +9,7 @@ const sequelize = require("./database");
 app.use(express.json());
 
 const userRoute = require("./routes/userRoute");
+const chatRoute = require("./routes/chatRoute");
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
@@ -17,6 +18,8 @@ app.use(express.static("public"));
 app.post("/signup", userRoute);
 
 app.post("/login", userRoute);
+
+app.get("/getusers", chatRoute);
 
 sequelize
   .sync({ force: false })

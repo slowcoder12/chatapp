@@ -47,3 +47,14 @@ button {
 button:hover {
     background-color: #3E8E41;
 }
+#container {
+    width: 50%;
+    height: 500px;
+    border: 2px solid black;
+    margin: auto ;
+}
+
+p{
+    padding: 15px;
+    margin: 0;
+}
