@@ -64,9 +64,11 @@ exports.loginUser = async (req, res) => {
       if (passwordMatch) {
         //console.log(user.password);
 
-        res
-          .status(200)
-          .json({ message: "User exists", token: generateToken(user) });
+        res.status(200).json({
+          message: "User exists",
+          token: generateToken(user),
+          userName: user.name,
+        });
       } else {
         res.status(401).json({ message: "User not authorized" });
       }

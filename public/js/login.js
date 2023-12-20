@@ -10,11 +10,14 @@ loginForm.addEventListener("submit", async function (event) {
   try {
     const response = await axios.post(`/login`, loginUser);
     if (response.status === 200) {
-      // console.log(response);
+      console.log(response);
 
       alert("user logged in successfully");
-      //console.log(response.data.token);
+      console.log(response.data.userName);
+
       localStorage.setItem("token", response.data.token);
+
+      window.location.href = "chat.html";
     }
   } catch (err) {
     if (err.response) {
