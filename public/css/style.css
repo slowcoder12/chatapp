@@ -10,6 +10,8 @@ body {
 
     padding: 25px;
     border-radius: 5px;
+  
+    
 }
 
 h1 {
@@ -52,9 +54,11 @@ button:hover {
     height: 500px;
     border: 2px solid black;
     margin: auto ;
+   
 }
 
 p{
     padding: 15px;
     margin: 0;
 }
+

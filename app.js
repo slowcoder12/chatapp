@@ -5,6 +5,8 @@ const dotenv = require("dotenv");
 const path = require("path");
 dotenv.config();
 const sequelize = require("./database");
+const User = require("./models/user");
+const Message = require("./models/message");
 
 app.use(express.json());
 
@@ -20,6 +22,10 @@ app.post("/signup", userRoute);
 app.post("/login", userRoute);
 
 app.get("/getusers", chatRoute);
+app.post("/sendmessage", chatRoute);
+
+User.hasMany(Message);
+Message.belongsTo(User);
 
 sequelize
   .sync({ force: false })
