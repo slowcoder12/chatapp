@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
 
       entry.innerText = `${usersResponse.data[i].name} joined`;
-      const box = document.getElementById("container");
+      const box = document.getElementById("user-container");
       box.appendChild(entry);
     }
 
@@ -53,36 +53,57 @@ document.addEventListener("DOMContentLoaded", async function () {
     async function fetchAndDisplayMessages() {
       try {
         const token = localStorage.getItem("token");
+        const lastMessageId = localStorage.getItem("lastMessageId") || -1;
 
         const messagesResponse = await axios.get(
-          "http://localhost:3000/getMessages",
+          `http://localhost:3000/getMessages?lastMessageId=${lastMessageId}`,
           {
             headers: { Authorization: token },
           }
         );
 
-        let messages = messagesResponse.data.result;
-        console.log(messages);
+        const newMessages = messagesResponse.data.result;
 
-        const container = document.getElementById("message-container");
-        container.innerHTML = ""; // Clear existing messages
+        if (newMessages.length > 0) {
+          let messages = JSON.parse(localStorage.getItem("messages")) || [];
 
-        for (let i = 0; i < messages.length; i++) {
-          const entry = document.createElement("p");
-          if (i % 2 === 0) {
-            entry.style.backgroundColor = "lightgrey";
+          messages = [...messages, ...newMessages];
+
+          if (messages.length > 1000) {
+            // Trim messages array if it exceeds 1000 messages
+            messages = messages.slice(messages.length - 1000);
           }
 
-          entry.innerText = `${messages[i].message_content}`;
-
-          container.appendChild(entry);
+          localStorage.setItem("messages", JSON.stringify(messages));
+          localStorage.setItem(
+            "lastMessageId",
+            messages[messages.length - 1].id
+          );
         }
+
+        displayMessages();
       } catch (err) {
         console.log("Error occurred", err);
       }
     }
 
-    // Fetch and display messages initially
+    function displayMessages() {
+      const messages = JSON.parse(localStorage.getItem("messages")) || [];
+      const container = document.getElementById("message-container");
+      container.innerHTML = ""; // Clear existing messages
+
+      for (let i = 0; i < messages.length; i++) {
+        const entry = document.createElement("p");
+        if (i % 2 === 0) {
+          entry.style.backgroundColor = "lightgrey";
+        }
+
+        entry.innerText = `${messages[i].message_content}`;
+        container.appendChild(entry);
+      }
+    }
+
+    // Initial fetch and display
     fetchAndDisplayMessages();
 
     setInterval(fetchAndDisplayMessages, 1000);
