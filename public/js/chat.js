@@ -49,4 +49,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
       console.log(response);
     });
+  document.getElementById("message-input").value = " ";
+});
+
+window.addEventListener("load", async function (e) {
+  e.preventDefault();
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get("http://localhost:3000/getMessages", {
+      headers: { Authorization: token },
+    });
+
+    let messages = response.data.result;
+    console.log(messages);
+
+    for (let i = 0; i < messages.length; i++) {
+      const entry = document.createElement("p");
+      if (i % 2 === 0) {
+        entry.style.backgroundColor = "lightgrey";
+      }
+
+      entry.innerText = `${messages[i].message_content}`;
+      const box = document.getElementById("container");
+      box.appendChild(entry);
+    }
+  } catch (err) {
+    console.log(err);
+  }
 });

@@ -54,6 +54,7 @@ button:hover {
     height: 500px;
     border: 2px solid black;
     margin: auto ;
+    overflow-y: auto; 
    
 }
 
@@ -61,4 +62,7 @@ p{
     padding: 15px;
     margin: 0;
 }
-
+#input-container {
+    width: 49%;
+    margin: auto;
+}

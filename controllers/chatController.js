@@ -29,11 +29,28 @@ exports.sendMessage = async (req, res) => {
 
     console.log(result);
 
-    res.status(201).json({ message: "Message added successfully" });
+    res.status(201).json(result, { message: "Message added successfully" });
   } catch (err) {
     console.log(err);
     res
       .status(500)
       .json({ message: "Error occurred in adding message to the database" });
+  }
+};
+
+exports.getMessages = async (req, res) => {
+  const userId = req.user.id;
+  try {
+    const result = await Message.findAll({
+      where: {
+        userId: userId,
+      },
+    });
+    res.status(200).json({ result, message: "messages fetched" });
+  } catch (err) {
+    console.log(err);
+    res
+      .status(500)
+      .json({ message: "Error occurred in fetching messages from db" });
   }
 };

@@ -23,6 +23,7 @@ app.post("/login", userRoute);
 
 app.get("/getusers", chatRoute);
 app.post("/sendmessage", chatRoute);
+app.get("/getMessages", chatRoute);
 
 User.hasMany(Message);
 Message.belongsTo(User);
