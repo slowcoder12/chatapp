@@ -29,7 +29,7 @@ exports.sendMessage = async (req, res) => {
 
     console.log(result);
 
-    res.status(201).json(result, { message: "Message added successfully" });
+    res.status(201).json({ result, message: "Message added successfully" });
   } catch (err) {
     console.log(err);
     res

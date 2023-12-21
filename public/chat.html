@@ -12,14 +12,16 @@
       <div id="message-container"></div>
     </div>
     <div id="input-container">
-      <input
-        type="text"
-        id="message-input"
-        class="input-field"
-        placeholder="Type your message"
-        required
-      />
-      <button id="send-button">Send</button>
+      <form id="message-form">
+        <input
+          type="text"
+          id="message-input"
+          class="input-field"
+          placeholder="Type your message"
+          required
+        />
+        <button type="submit" id="send-button">Send</button>
+      </form>
     </div>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

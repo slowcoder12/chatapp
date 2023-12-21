@@ -1,80 +1,92 @@
-window.addEventListener("load", async function (e) {
+document.addEventListener("DOMContentLoaded", async function () {
   try {
     const token = localStorage.getItem("token");
 
-    const response = await axios.get(
-      "http://localhost:3000/getusers",
+    // Fetch users
+    const usersResponse = await axios.get("http://localhost:3000/getusers", {
+      headers: { Authorization: token },
+    });
 
-      {
-        headers: { Authorization: token },
-      }
-    );
-    //console.log(response.data);
-
-    for (let i = 0; i < response.data.length; i++) {
+    for (let i = 0; i < usersResponse.data.length; i++) {
       const entry = document.createElement("p");
       if (i % 2 == 0) {
         entry.style.backgroundColor = "lightgrey";
       }
 
-      entry.innerText = `${response.data[i].name} joined`;
+      entry.innerText = `${usersResponse.data[i].name} joined`;
       const box = document.getElementById("container");
       box.appendChild(entry);
     }
-  } catch (err) {
-    console.log("error occured", err);
-  }
-});
 
-document.addEventListener("DOMContentLoaded", function () {
-  document
-    .getElementById("send-button")
-    .addEventListener("click", async function (e) {
-      e.preventDefault();
-      const message = document.getElementById("message-input").value;
-      const msg = { message };
+    // Send message
+    document
+      .getElementById("send-button")
+      .addEventListener("click", async function (e) {
+        e.preventDefault();
+        const messageInput = document.getElementById("message-input");
+        const message = messageInput.value;
+        const msg = { message };
 
-      console.log(msg);
+        console.log(msg);
 
-      const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
 
-      const response = await axios.post(
-        "http://localhost:3000/sendmessage",
-        msg,
+        try {
+          const response = await axios.post(
+            "http://localhost:3000/sendmessage",
+            msg,
+            {
+              headers: { Authorization: token },
+            }
+          );
 
-        {
-          headers: { Authorization: token },
+          console.log(response);
+
+          // Reset the input field after a successful send
+          messageInput.value = "";
+        } catch (err) {
+          console.log("Error occurred in sending message", err);
         }
-      );
+      });
 
-      console.log(response);
-    });
-  document.getElementById("message-input").value = " ";
-});
+    // Fetch messages
+    async function fetchAndDisplayMessages() {
+      try {
+        const token = localStorage.getItem("token");
 
-window.addEventListener("load", async function (e) {
-  e.preventDefault();
-  try {
-    const token = localStorage.getItem("token");
+        const messagesResponse = await axios.get(
+          "http://localhost:3000/getMessages",
+          {
+            headers: { Authorization: token },
+          }
+        );
 
-    const response = await axios.get("http://localhost:3000/getMessages", {
-      headers: { Authorization: token },
-    });
+        let messages = messagesResponse.data.result;
+        console.log(messages);
 
-    let messages = response.data.result;
-    console.log(messages);
+        const container = document.getElementById("message-container");
+        container.innerHTML = ""; // Clear existing messages
 
-    for (let i = 0; i < messages.length; i++) {
-      const entry = document.createElement("p");
-      if (i % 2 === 0) {
-        entry.style.backgroundColor = "lightgrey";
+        for (let i = 0; i < messages.length; i++) {
+          const entry = document.createElement("p");
+          if (i % 2 === 0) {
+            entry.style.backgroundColor = "lightgrey";
+          }
+
+          entry.innerText = `${messages[i].message_content}`;
+
+          container.appendChild(entry);
+        }
+      } catch (err) {
+        console.log("Error occurred", err);
       }
-
-      entry.innerText = `${messages[i].message_content}`;
-      const box = document.getElementById("container");
-      box.appendChild(entry);
     }
+
+    // Fetch and display messages initially
+    fetchAndDisplayMessages();
+
+    setInterval(fetchAndDisplayMessages, 1000);
   } catch (err) {
-    console.log(err);
+    console.log("Error occurred", err);
   }
 });
