@@ -45,7 +45,6 @@ exports.getMessages = async (req, res) => {
   try {
     const result = await Message.findAll({
       where: {
-        userId: userId,
         id: { [Op.gt]: lastMessageId },
       },
     });

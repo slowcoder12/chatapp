@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       box.appendChild(entry);
     }
 
-    // Send message
+    //Send message
     document
       .getElementById("send-button")
       .addEventListener("click", async function (e) {
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         const message = messageInput.value;
         const msg = { message };
 
-        console.log(msg);
+        console.log("message from chat.js", msg);
 
         const token = localStorage.getItem("token");
 
@@ -105,8 +105,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Initial fetch and display
     fetchAndDisplayMessages();
-
-    setInterval(fetchAndDisplayMessages, 1000);
+    // setInterval(fetchAndDisplayMessages, 1000);
   } catch (err) {
     console.log("Error occurred", err);
   }

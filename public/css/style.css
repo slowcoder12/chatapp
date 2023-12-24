@@ -2,6 +2,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
+   
 }
 
 .container {
@@ -50,11 +51,12 @@ button:hover {
     background-color: #3E8E41;
 }
 #container {
-    width: 50%;
+    width: 600px;
     height: 500px;
     border: 2px solid black;
     margin: auto ;
     overflow-y: auto; 
+
    
 }
 
@@ -62,7 +64,37 @@ p{
     padding: 15px;
     margin: 0;
 }
-#input-container {
-    width: 49%;
-    margin: auto;
+
+#message-form {
+    display: flex;
 }
+#message-form #message-input {
+min-width: 85%;
+  }
+#full-sec {
+    display: flex;
+    justify-content: space-evenly;
+
+}
+#group-container {
+    width: 250px;
+    height: 500px;
+    border: 2px solid black;
+}
+
+#send-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+#group-container p {
+    cursor: pointer;
+  }
+
+  #user-selection-modal{
+    border: 2px solid black;
+  }

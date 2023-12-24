@@ -8,24 +8,43 @@
   </head>
   <body>
     <h1>Chat App</h1>
-    <div id="container">
-      <div id="user-container"></div>
-      <div id="message-container"></div>
-    </div>
-    <div id="input-container">
-      <form id="message-form">
-        <input
-          type="text"
-          id="message-input"
-          class="input-field"
-          placeholder="Type your message"
-          required
-        />
-        <button type="submit" id="send-button">Send</button>
-      </form>
-    </div>
+    <section id="full-sec">
+      <section id="group-sec">
+        <h1>Groups</h1>
+        <button id="add-group-button">Add Group</button>
+        <div id="add-group-form" style="display: none">
+          <form id="add-group-form">
+            <label for="group-name">Group Name:</label>
+            <input type="text" id="group-name" class="input-field" required />
+            <button type="button" id="add-group-submit">Add</button>
+          </form>
+        </div>
+
+        <div id="group-container"></div>
+      </section>
+      <section id="chat-sec">
+        <h1 id="chat-head">Chat</h1>
+        <div id="container">
+          <div id="user-container"></div>
+          <div id="message-container"></div>
+        </div>
+        <div id="input-container">
+          <form id="message-form">
+            <input
+              type="text"
+              id="message-input"
+              class="input-field"
+              placeholder="Type your message"
+              required
+            />
+            <button type="submit" id="send-button">Send</button>
+          </form>
+        </div>
+      </section>
+    </section>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="./js/login.js"></script>
   <script src="./js/chat.js"></script>
+  <script src="./js/group.js"></script>
 </html>
