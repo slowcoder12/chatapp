@@ -35,4 +35,22 @@ router.post(
 //   groupController.getGroupsForUser
 // );
 
+router.post(
+  "/getusernames",
+  userAuthenticate.authenticate,
+  groupController.getUserNames
+);
+
+router.post(
+  "/removeusersfromgroup/:groupId",
+  userAuthenticate.authenticate,
+  groupController.removeUsersFromGroup
+);
+router.get(
+  "/getgroupmembers/:groupId",
+  userAuthenticate.authenticate,
+  groupController.getGroupMembers
+);
+
+router.post("/makeadmins/:groupId", groupController.makeAdminsInGroup);
 module.exports = router;

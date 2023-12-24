@@ -12,7 +12,8 @@ exports.createGroup = async (req, res) => {
       group_name: groupName,
       createdBy: userId,
     });
-    await response.addUsers([userId]);
+
+    await response.addUsers([userId], { through: { isAdmin: true } });
 
     res.status(201).json({ response, message: "group created successfully" });
   } catch (err) {
@@ -27,7 +28,7 @@ exports.getgroups = async (req, res) => {
       include: [
         {
           model: Group,
-          through: "UserGroup",
+          through: "UserGroups",
           as: "groups",
         },
       ],
@@ -83,9 +84,6 @@ exports.getGMessages = async (req, res) => {
   }
 };
 
-// Assuming you have your Sequelize models defined (User, Group, UserGroup)
-
-// Express route to handle adding users to a group
 exports.adduserstogroup = async (req, res) => {
   const groupId = req.params.groupId;
   const { userIds } = req.body;
@@ -114,5 +112,132 @@ exports.adduserstogroup = async (req, res) => {
   } catch (err) {
     console.error("Error adding users to the group", err);
     return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.getUserNames = async (req, res) => {
+  try {
+    const userIds = req.body.userIds;
+
+    if (!userIds || !Array.isArray(userIds)) {
+      return res.status(400).json({ message: "Invalid user IDs" });
+    }
+
+    const users = await User.findAll({
+      attributes: ["id", "name"],
+      where: {
+        id: userIds,
+      },
+    });
+
+    const userNameMap = {};
+    users.forEach((user) => {
+      userNameMap[user.id] = user.name;
+    });
+
+    res.status(200).json(userNameMap);
+  } catch (err) {
+    console.error("Error fetching user names", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.makeAdminsInGroup = async (req, res) => {
+  const groupId = req.params.groupId;
+  const { userIds } = req.body;
+  console.log("Making users admins in group", userIds);
+
+  try {
+    // Find the group
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+      return res.status(404).json({ error: "Group not found" });
+    }
+
+    // Find the users to make admins
+    const usersToMakeAdmin = await User.findAll({
+      where: {
+        id: userIds,
+      },
+    });
+
+    // Make users admins in the group
+    const response = await group.addUsers(usersToMakeAdmin, {
+      through: { isAdmin: true },
+    });
+    console.log("Users made admins in the group", response);
+
+    return res
+      .status(200)
+      .json({ message: "Users made admins in the group successfully" });
+  } catch (err) {
+    console.error("Error making users admins in the group", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.removeUsersFromGroup = async (req, res) => {
+  const groupId = req.params.groupId;
+  const { userIds } = req.body;
+
+  try {
+    // Find the group
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+      return res.status(404).json({ error: "Group not found" });
+    }
+
+    // Find the users to remove
+    const usersToRemove = await User.findAll({
+      where: {
+        id: userIds,
+      },
+    });
+
+    // Remove users from the group
+    const response = await group.removeUsers(usersToRemove);
+    console.log("Users removed from the group", response);
+
+    return res
+      .status(200)
+      .json({ message: "Users removed from the group successfully" });
+  } catch (err) {
+    console.error("Error removing users from the group", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.getGroupMembers = async (req, res) => {
+  const groupId = req.params.groupId;
+
+  try {
+    // Find the group
+    const group = await Group.findByPk(groupId, {
+      include: [
+        {
+          model: User,
+          through: "UserGroups",
+          as: "users",
+        },
+      ],
+    });
+
+    if (!group) {
+      return res.status(404).json({ error: "Group not found" });
+    }
+
+    const members = group.users.map((user) => {
+      return {
+        id: user.id,
+        name: user.name,
+      };
+    });
+
+    res.status(200).json(members);
+  } catch (err) {
+    console.error("Error fetching group members", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 };

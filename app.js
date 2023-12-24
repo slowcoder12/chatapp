@@ -9,6 +9,7 @@ const User = require("./models/user");
 const Message = require("./models/message");
 const Group = require("./models/group");
 const GroupMessage = require("./models/groupMessages");
+const UserGroups = require("./models/UserGroup");
 
 app.use(express.json());
 
@@ -35,14 +36,19 @@ app.post("/sendGmessage", groupRoute);
 app.get("/getGmessages/:groupId", groupRoute);
 
 app.post("/adduserstogroup/:groupId", groupRoute);
+app.post("/getusernames", groupRoute);
 
+app.post("/makeadmins/:groupId", groupRoute);
 // app.get("/getGroupsForUser/:userId", groupRoute);
+app.get("/getgroupmembers/:groupId", groupRoute);
+
+app.post("/removeusersfromgroup/:groupId", groupRoute);
 
 User.hasMany(Message);
 Message.belongsTo(User);
 
-User.belongsToMany(Group, { through: "UserGroup" });
-Group.belongsToMany(User, { through: "UserGroup" });
+User.belongsToMany(Group, { through: UserGroups });
+Group.belongsToMany(User, { through: UserGroups });
 
 User.hasMany(GroupMessage);
 GroupMessage.belongsTo(User);

@@ -1,6 +1,5 @@
 const sequelize = require("../database");
 const Sequelize = require("sequelize");
-const UserGroup = sequelize.models.UserGroup;
 
 const groupMessage = sequelize.define("Groupmessages", {
   message_content: {
