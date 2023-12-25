@@ -2,6 +2,13 @@ const sequelize = require("../database");
 const User = require("../models/user");
 const Message = require("../models/message");
 const { Op } = require("sequelize");
+const express = require("express");
+const http = require("http");
+const socketIO = require("socket.io");
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
 
 exports.getUsers = async (req, res) => {
   try {
@@ -29,6 +36,7 @@ exports.sendMessage = async (req, res) => {
     });
 
     console.log(result);
+    io.emit("newMessage", { message: result.message_content });
 
     res.status(201).json({ result, message: "Message added successfully" });
   } catch (err) {

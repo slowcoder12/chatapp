@@ -2,6 +2,13 @@ const User = require("../models/user");
 const Message = require("../models/message");
 const Group = require("../models/group");
 const groupMessage = require("../models/groupMessages");
+const express = require("express");
+const http = require("http");
+const socketIO = require("socket.io");
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
 
 exports.createGroup = async (req, res) => {
   try {
@@ -55,7 +62,10 @@ exports.sendGroupMessage = async (req, res) => {
       group_id: groupId,
       userId: userId,
     });
-
+    io.to(`group-${groupId}`).emit("newGroupMessage", {
+      groupId: groupId,
+      message: newMessage,
+    });
     //console.log(newMessage);
 
     res.status(201).json({ message: "Message sent successfully", newMessage });

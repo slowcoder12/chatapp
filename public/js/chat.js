@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", async function () {
   try {
+    const socket = io("http://localhost:3000");
     const token = localStorage.getItem("token");
 
     // Fetch users
@@ -26,6 +27,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         const messageInput = document.getElementById("message-input");
         const message = messageInput.value;
         const msg = { message };
+
+        socket.emit("sendMessage", { message });
 
         console.log("message from chat.js", msg);
 
@@ -87,6 +90,12 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
     }
 
+    socket.on("newMessage", (data) => {
+      console.log("New message received:", data.message);
+
+      fetchAndDisplayMessages();
+    });
+
     function displayMessages() {
       const messages = JSON.parse(localStorage.getItem("messages")) || [];
       const container = document.getElementById("message-container");
@@ -104,7 +113,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // Initial fetch and display
-    fetchAndDisplayMessages();
+    //fetchAndDisplayMessages();
     // setInterval(fetchAndDisplayMessages, 1000);
   } catch (err) {
     console.log("Error occurred", err);

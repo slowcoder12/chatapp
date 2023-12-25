@@ -1,5 +1,6 @@
 let currentgroupId;
 document.addEventListener("DOMContentLoaded", async function () {
+  const socket = io("http://localhost:3000");
   const addGroupButton = document.getElementById("add-group-button");
   const addGroupForm = document.getElementById("add-group-form");
 
@@ -92,6 +93,17 @@ document.addEventListener("DOMContentLoaded", async function () {
     );
 
     chatSec.appendChild(addMembersButton);
+
+    socket.on("newGroupMessage", (data) => {
+      const { groupId: messageGroupId, message } = data;
+
+      if (messageGroupId === groupId) {
+        // Update the UI with the new message
+        const messageEntry = document.createElement("p");
+        messageEntry.innerText = message.message_content;
+        messageContainer.appendChild(messageEntry);
+      }
+    });
 
     const removeMembersButton = document.createElement("button");
     removeMembersButton.id = "remove-members-button";
@@ -401,6 +413,4 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.log("Error occurred in removing members from the group", err);
     }
   }
-
-  // Your existing code...
 });
