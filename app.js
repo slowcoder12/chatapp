@@ -12,6 +12,7 @@ const Message = require("./models/message");
 const Group = require("./models/group");
 const GroupMessage = require("./models/groupMessages");
 const UserGroups = require("./models/UserGroup");
+const archiveGroupMessages = require("./models/archivemodel");
 
 app.use(express.json());
 const server = http.createServer(app);
@@ -81,6 +82,13 @@ app.post("/makeadmins/:groupId", groupRoute);
 app.get("/getgroupmembers/:groupId", groupRoute);
 
 app.post("/removeusersfromgroup/:groupId", groupRoute);
+
+const cron = require("node-cron");
+
+const moveAndDeleteOldMessages = require("./controllers/archiveController");
+
+// Run the function every night at midnight
+cron.schedule("0 0 * * *", moveAndDeleteOldMessages);
 
 User.hasMany(Message);
 Message.belongsTo(User);
