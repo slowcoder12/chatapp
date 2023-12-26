@@ -98,3 +98,7 @@ min-width: 85%;
   #user-selection-modal{
     border: 2px solid black;
   }
+
+  #file-upload{
+    width: 50px;
+  }

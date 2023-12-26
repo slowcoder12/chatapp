@@ -12,6 +12,7 @@ const Message = require("./models/message");
 const Group = require("./models/group");
 const GroupMessage = require("./models/groupMessages");
 const UserGroups = require("./models/UserGroup");
+
 app.use(express.json());
 const server = http.createServer(app);
 const io = socketIO(server);
@@ -52,6 +53,7 @@ io.on("connection", (socket) => {
 const userRoute = require("./routes/userRoute");
 const chatRoute = require("./routes/chatRoute");
 const groupRoute = require("./routes/groupRoute");
+
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 

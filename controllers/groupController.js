@@ -1,10 +1,21 @@
 const User = require("../models/user");
-const Message = require("../models/message");
+
 const Group = require("../models/group");
 const groupMessage = require("../models/groupMessages");
 const express = require("express");
 const http = require("http");
 const socketIO = require("socket.io");
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+const AWS = require("aws-sdk");
+const s3 = new AWS.S3({
+  accessKeyId: process.env.IAM_USER_KEY,
+  secretAccessKey: process.env.IAM_USER_SECRET,
+  region: process.env.IAM_REGION,
+  endpoint: "s3.amazonaws.com",
+});
 
 const app = express();
 const server = http.createServer(app);
@@ -48,27 +59,57 @@ exports.getgroups = async (req, res) => {
   }
 };
 
+const sendGroupMessageMiddleware = upload.single("image");
+
 exports.sendGroupMessage = async (req, res) => {
   try {
-    console.log("backend send tounched");
-    const message = req.body.message;
-    const groupId = req.body.groupId;
-    const userId = req.user.id;
+    // Apply the middleware to handle form data
+    sendGroupMessageMiddleware(req, res, async (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(400).json({ message: "Error processing form data" });
+      }
 
-    console.log(message, groupId, userId);
+      console.log("backend send touched");
+      const message = req.body.message;
+      const groupId = req.body.groupId;
+      const userId = req.user.id;
+      const imageFile = req.file;
 
-    const newMessage = await groupMessage.create({
-      message_content: message,
-      group_id: groupId,
-      userId: userId,
+      console.log(message, groupId, userId, imageFile);
+
+      let imageUrl;
+
+      // Check if an image file is provided
+      if (imageFile) {
+        const uploadParams = {
+          Bucket: process.env.BUCKET_NAME,
+          Key: `group-messages/${groupId}/${imageFile.originalname}`, // Adjust the key as needed
+          Body: imageFile.buffer,
+        };
+
+        const s3UploadResponse = await s3.upload(uploadParams).promise();
+        console.log("s3 upload", s3UploadResponse);
+
+        imageUrl = s3UploadResponse.Location;
+      }
+
+      const newMessage = await groupMessage.create({
+        message_content: message,
+        group_id: groupId,
+        userId: userId,
+        imageUrl: imageUrl, // Set imageUrl whether or not an image is uploaded
+      });
+
+      io.to(`group-${groupId}`).emit("newGroupMessage", {
+        groupId: groupId,
+        message: newMessage,
+      });
+
+      res
+        .status(201)
+        .json({ message: "Message sent successfully", newMessage });
     });
-    io.to(`group-${groupId}`).emit("newGroupMessage", {
-      groupId: groupId,
-      message: newMessage,
-    });
-    //console.log(newMessage);
-
-    res.status(201).json({ message: "Message sent successfully", newMessage });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error sending message" });

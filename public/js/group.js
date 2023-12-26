@@ -130,6 +130,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     const inputContainer = document.createElement("div");
     inputContainer.id = "input-container";
 
+    const imageInput = document.createElement("input");
+    imageInput.type = "file";
+    imageInput.id = "image-input";
+    imageInput.accept = "image/*"; //  only image files
+    inputContainer.appendChild(imageInput);
+
     const messageForm = document.createElement("form");
     messageForm.id = "message-form";
 
@@ -156,6 +162,8 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.log("message formmm  submiteedddd");
       e.preventDefault();
       const messageInput = document.getElementById("message-input");
+      const imageFile = document.getElementById("image-input").files[0];
+
       const message = messageInput.value;
       const groupId = getCurrentGroupId();
       const token = localStorage.getItem("token");
@@ -164,10 +172,16 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.log("messageeé", message, groupId);
 
       try {
+        const formData = new FormData();
+        formData.append("message", message);
+        formData.append("groupId", groupId);
+        formData.append("image", imageFile);
+
+        // console.log("hello", formData.get("message"));
         // Send the message to the selected group
         const response = await axios.post(
           "http://localhost:3000/sendGmessage",
-          obj,
+          formData,
           { headers: { Authorization: token } }
         );
         console.log(response);

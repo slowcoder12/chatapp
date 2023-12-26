@@ -29,12 +29,6 @@ router.post(
   groupController.adduserstogroup
 );
 
-// router.get(
-//   "/getGroupsForUser/:userId",
-//   userAuthenticate.authenticate,
-//   groupController.getGroupsForUser
-// );
-
 router.post(
   "/getusernames",
   userAuthenticate.authenticate,

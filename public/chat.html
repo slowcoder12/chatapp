@@ -28,7 +28,7 @@
           <div id="user-container"></div>
           <div id="message-container"></div>
         </div>
-        <div id="input-container">
+        <div id="input-container" enctype="multipart/form-data">
           <form id="message-form">
             <input
               type="text"
@@ -37,6 +37,7 @@
               placeholder="Type your message"
               required
             />
+            <input type="file" id="image-input" />
             <button type="submit" id="send-button">Send</button>
           </form>
         </div>

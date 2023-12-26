@@ -10,6 +10,10 @@ const groupMessage = sequelize.define("Groupmessages", {
     type: Sequelize.INTEGER,
     allowNull: false,
   },
+  imageUrl: {
+    type: Sequelize.STRING,
+    allowNull: true,
+  },
 });
 
 module.exports = groupMessage;
